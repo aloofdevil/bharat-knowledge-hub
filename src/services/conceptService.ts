@@ -1,35 +1,35 @@
+import { supabase } from "@/integrations/supabase/client";
 import { Concept, Stats, SyncResult } from "@/types";
-import { initialConcepts, syllabusData } from "@/data/concepts";
 
-const STORAGE_KEY = "educache_concepts";
+export async function getConcepts(): Promise<Concept[]> {
+  const { data, error } = await supabase
+    .from("concepts")
+    .select("*")
+    .order("created_at", { ascending: true });
 
-function loadConcepts(): Concept[] {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) {
-    try {
-      return JSON.parse(stored);
-    } catch {
-      return [...initialConcepts];
-    }
-  }
-  const initial = [...initialConcepts];
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
-  return initial;
+  if (error) throw error;
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    topic: row.topic,
+    domain: row.domain,
+    difficulty: row.difficulty as Concept["difficulty"],
+    explanation: row.explanation,
+  }));
 }
 
-function saveConcepts(concepts: Concept[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(concepts));
-}
+export async function getStats(): Promise<Stats> {
+  const { data, error } = await supabase
+    .from("concepts")
+    .select("difficulty, domain");
 
-export function getConcepts(): Concept[] {
-  return loadConcepts();
-}
-
-export function getStats(): Stats {
-  const concepts = loadConcepts();
+  if (error) throw error;
+  const concepts = data ?? [];
   const domains = new Set(concepts.map((c) => c.domain));
   const distribution = { beginner: 0, intermediate: 0, advanced: 0 };
-  concepts.forEach((c) => distribution[c.difficulty]++);
+  concepts.forEach((c) => {
+    const d = c.difficulty as keyof typeof distribution;
+    if (d in distribution) distribution[d]++;
+  });
 
   return {
     totalConcepts: concepts.length,
@@ -39,16 +39,37 @@ export function getStats(): Stats {
   };
 }
 
-export function syncSyllabus(): SyncResult {
-  const concepts = loadConcepts();
-  const existingTopics = new Set(concepts.map((c) => c.topic));
-  const toAdd = syllabusData.filter((s) => !existingTopics.has(s.topic));
+export async function syncSyllabus(): Promise<SyncResult> {
+  // Get existing concept topics
+  const { data: existing, error: e1 } = await supabase
+    .from("concepts")
+    .select("topic");
+  if (e1) throw e1;
 
-  const updated = [...concepts, ...toAdd];
-  saveConcepts(updated);
+  const existingTopics = new Set((existing ?? []).map((c) => c.topic));
+
+  // Get syllabus entries
+  const { data: syllabus, error: e2 } = await supabase
+    .from("syllabus")
+    .select("*");
+  if (e2) throw e2;
+
+  const toAdd = (syllabus ?? []).filter((s) => !existingTopics.has(s.topic));
+
+  if (toAdd.length > 0) {
+    const { error: e3 } = await supabase.from("concepts").insert(
+      toAdd.map((s) => ({
+        topic: s.topic,
+        domain: s.domain,
+        difficulty: s.difficulty,
+        explanation: s.explanation,
+      }))
+    );
+    if (e3) throw e3;
+  }
 
   return {
     added: toAdd.length,
-    duplicates: syllabusData.length - toAdd.length,
+    duplicates: (syllabus ?? []).length - toAdd.length,
   };
 }
