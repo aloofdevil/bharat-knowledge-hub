@@ -49,18 +49,72 @@ export default function Home() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Link to="/brain" className="group flex items-center gap-3 rounded-xl border border-border bg-card p-5 shadow-card transition-all hover:shadow-card-hover hover:border-primary/30 animate-fade-in-up" style={{ animationDelay: "380ms" }}>
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg gradient-primary text-primary-foreground transition-transform group-hover:scale-105"><Eye className="h-5 w-5" /></div>
-          <div><p className="font-semibold text-foreground">View Stored Knowledge</p><p className="text-sm text-muted-foreground">Browse all cached concepts</p></div>
+
+        {/* Ask your doubt */}
+        <a
+          href="https://educache-git-main-nikunj169s-projects.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center gap-3 rounded-xl border border-border bg-card p-5 shadow-card transition-all hover:shadow-card-hover hover:border-primary/30 animate-fade-in-up text-left"
+          style={{ animationDelay: "500ms" }}
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg gradient-primary text-primary-foreground transition-transform group-hover:scale-105">
+            <Share2 className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="font-semibold text-foreground">Ask your doubt</p>
+            <p className="text-sm text-muted-foreground">Feel free to ask anything</p>
+          </div>
+        </a>
+
+
+        <Link
+          to="/brain"
+          className="group flex items-center gap-3 rounded-xl border border-border bg-card p-5 shadow-card transition-all hover:shadow-card-hover hover:border-primary/30 animate-fade-in-up"
+          style={{ animationDelay: "380ms" }}
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg gradient-primary text-primary-foreground transition-transform group-hover:scale-105">
+            <Eye className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="font-semibold text-foreground">View Stored Knowledge</p>
+            <p className="text-sm text-muted-foreground">Browse all cached concepts</p>
+          </div>
         </Link>
-        <Link to="/sync" className="group flex items-center gap-3 rounded-xl border border-border bg-card p-5 shadow-card transition-all hover:shadow-card-hover hover:border-primary/30 animate-fade-in-up" style={{ animationDelay: "440ms" }}>
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg gradient-primary text-primary-foreground transition-transform group-hover:scale-105"><RefreshCw className="h-5 w-5" /></div>
-          <div><p className="font-semibold text-foreground">Teacher Sync</p><p className="text-sm text-muted-foreground">Load syllabus from teacher</p></div>
+
+
+        <Link
+          to="/sync"
+          className="group flex items-center gap-3 rounded-xl border border-border bg-card p-5 shadow-card transition-all hover:shadow-card-hover hover:border-primary/30 animate-fade-in-up"
+          style={{ animationDelay: "440ms" }}
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg gradient-primary text-primary-foreground transition-transform group-hover:scale-105">
+            <RefreshCw className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="font-semibold text-foreground">Teacher Sync</p>
+            <p className="text-sm text-muted-foreground">Load syllabus from teacher</p>
+          </div>
         </Link>
-        <button className="group flex items-center gap-3 rounded-xl border border-border bg-card p-5 shadow-card transition-all hover:shadow-card-hover hover:border-primary/30 animate-fade-in-up text-left" style={{ animationDelay: "500ms" }} onClick={() => {}}>
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg gradient-primary text-primary-foreground transition-transform group-hover:scale-105"><Share2 className="h-5 w-5" /></div>
-          <div><p className="font-semibold text-foreground">P2P Share</p><p className="text-sm text-muted-foreground">Share with nearby peers</p></div>
-        </button>
+
+
+        {/* P2P Share */}
+        <a
+          href="https://swarm-knowledge.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center gap-3 rounded-xl border border-border bg-card p-5 shadow-card transition-all hover:shadow-card-hover hover:border-primary/30 animate-fade-in-up text-left"
+          style={{ animationDelay: "500ms" }}
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg gradient-primary text-primary-foreground transition-transform group-hover:scale-105">
+            <Share2 className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="font-semibold text-foreground">P2P Share</p>
+            <p className="text-sm text-muted-foreground">Share with nearby peers</p>
+          </div>
+        </a>
+
       </div>
     </AppLayout>
   );
